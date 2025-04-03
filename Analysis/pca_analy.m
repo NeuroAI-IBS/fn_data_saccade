@@ -14,6 +14,67 @@ for a=1:8; % orientation
     data_total{a}=t_temp;
 end; clear a;
 
+%% Plotting raw data of each orientation
+
+label_ori={'Up','Up right', 'Right', 'Down right',...
+    'Down', 'Down left', 'Left', 'Up left'};
+figure
+for a=1:8;
+    
+    subplot(2,4,a)
+    imagesc(data_total{a});
+    hold on;
+    plot([100 100],[0 37559],'r', 'LineWidth',1);
+    xticks([0:50:600])
+    xticklabels([-300:50:300])
+    title(label_ori{a})
+    ylabel("Cell#")
+    xlabel("Time(ms)")
+    colormap("jet")
+    
+end; clear a
+
+set(gcf,'OuterPosition', [0, 0, 2050, 800])
+tightfig
+
+%% smothing
+
+data_cat_sm={};
+for angle = 1:8;
+    temp_cat=[];
+    for n = 1:size(data_cat,1);   
+
+        z = data_cat{n, angle};
+        zf = filter_matrix(z', 'sigma', 2)';
+        temp_cat=[temp_cat;mean(zf)];
+    end
+    data_cat_sm{angle}=temp_cat;
+end
+
+%% Plotting
+
+label_ori={'Up','Up right', 'Right', 'Down right',...
+    'Down', 'Down left', 'Left', 'Up left'};
+figure
+for a=1:8;
+    
+    subplot(2,4,a)
+    imagesc(data_cat_sm{a});
+    hold on;
+    plot([300 300],[0 37559],'r', 'LineWidth',1);
+    xticks([0:50:600])
+    xticklabels([-300:50:300])
+    title(label_ori{a})
+    ylabel("Cell#")
+    xlabel("Time(ms)")
+    colormap(jet)
+    
+end; clear a
+
+set(gcf,'OuterPosition', [0, 0, 2050, 800])
+tightfig
+
+
 %% PCA analysis
 
 PCA_total={};
@@ -22,7 +83,7 @@ figure;
 num=1;
 for ori=1:8; %orientation
     
-    temp_data=data_total{ori};
+    temp_data=data_cat_sm{ori};
     [v,p,~,~,dd,~]=pca(temp_data');
     var_explained = cumsum(dd)/sum(dd)*1e2;
     
@@ -49,7 +110,7 @@ for ori=1:8; %orientation
     %     for i=1:nmode
     for i=1:4;
         hx(i) = subplot(4,1,i);
-        plot(-100:300-1, p(:,i))
+        plot(-300:300-1, p(:,i))
         axis tight
         box off
     end
@@ -68,7 +129,7 @@ end; clear ori
 
 close all
 
-win=100; %timewindow (ms), if sampling rate is 1000hz, win=10 is 10ms
+win=1; %timewindow (ms), if sampling rate is 1000hz, win=10 is 10ms
 
 color=[];
 for a=0:7;
@@ -85,7 +146,7 @@ for ori=1:8;
     s_temp2=smoothdata(temp_PC(:,2),'gaussian',win);
     s_temp3=smoothdata(temp_PC(:,3),'gaussian',win);
     
-    X=s_temp1(1:400); Y=s_temp2(1:400); Z=s_temp3(1:400);
+    X=s_temp1(1:600); Y=s_temp2(1:600); Z=s_temp3(1:600);
     scatter3(X,Y,Z,10, color(ori,:), "o");
     hold on
 end
@@ -100,7 +161,7 @@ zlabel('PC3')
 
 close all
 
-win=100; %timewindow (ms), if sampling rate is 1000hz, win=10 is 10ms
+win=20; %timewindow (ms), if sampling rate is 1000hz, win=10 is 10ms
 
 color=[];
 for a=0:7;
@@ -119,7 +180,7 @@ for ori=1:8;
     s_temp3=smoothdata(temp_PC(:,3),'gaussian',win);
     
     subplot(1,8,ori)
-    X=s_temp1(1:400); Y=s_temp2(1:400); Z=s_temp3(1:400);
+    X=s_temp1(1:600); Y=s_temp2(1:600); Z=s_temp3(1:600);
     scatter3(X,Y,Z,10, color(ori,:), "o");
     
     axis square
@@ -131,7 +192,7 @@ for ori=1:8;
 end; clear ori
 
 figure
-num=1:2:16;
+num=1:4:32;
 for ori=1:8;
     
     temp_PC=PCA_total{ori,2};
@@ -139,19 +200,30 @@ for ori=1:8;
     s_temp1=smoothdata(temp_PC(:,1),'gaussian',win);
     s_temp2=smoothdata(temp_PC(:,2),'gaussian',win);
     s_temp3=smoothdata(temp_PC(:,3),'gaussian',win);
+    s_temp4=smoothdata(temp_PC(:,4),'gaussian',win);
     
-    X=s_temp1(1:400); Y=s_temp2(1:400); Z=s_temp3(1:400);
+    X=s_temp1(1:600); Y=s_temp2(1:600); Z=s_temp3(1:600); Z2=s_temp4(1:600);
     
-    subplot(8,2,num(ori))
-    plot(-100:300-1,X)
-    
+    subplot(8,4,num(ori))
+    plot(-300:300-1,X)    
     xlabel('Time(ms)')
     ylabel('PC1')
     
-    subplot(8,2,num(ori)+1)
-    plot(-100:300-1,Y)
+    subplot(8,4,num(ori)+1)
+    plot(-300:300-1,Y)
     xlabel('Time(ms)')
     ylabel('PC2')
+
+    subplot(8,4,num(ori)+2)
+    plot(-300:300-1,Z)
+    xlabel('Time(ms)')
+    ylabel('PC3')
+    set(gca, 'YDir','reverse')
+
+    subplot(8,4,num(ori)+3)
+    plot(-300:300-1,Z2)
+    xlabel('Time(ms)')
+    ylabel('PC4')
     
     %     axis square
     
