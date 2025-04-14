@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.signal import convolve
-from scipy.signal import gaussian
+from scipy.signal.windows import gaussian
 
 def filter_matrix(X, sigma=1.5, L=-1, scheme=0):
     """
@@ -48,7 +48,7 @@ def filter_matrix(X, sigma=1.5, L=-1, scheme=0):
     else:
         # Forward-backward filtering
         from scipy.signal import filtfilt
-        Xf = filtfilt(ker, 1, Y, axis=0, padlen = padlen)
+        Xf = filtfilt(ker, 1, Y, axis=1, padlen = padlen)
     
     # Remove padding
     return Xf[nker: nker + X.shape[0], :]
