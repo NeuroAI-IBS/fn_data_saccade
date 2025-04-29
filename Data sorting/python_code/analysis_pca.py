@@ -160,3 +160,89 @@ class analysis_pca:
         PCA_total2 = {'v': pca.components_, 'p': pca.transform(pca_data), 'dd': pca.explained_variance_ratio_}
     
         return PCA_total2
+
+
+    def pca_plot(self, data, onset, type, title = "pca_fig.jpg", save = True):
+        """
+        Plot for PCA data
+    
+        Parameters:
+            data: dictionary{'v': pca components, 'p': pca transform data, 'dd': explained variance_ratio}
+            onset: onset time point (data point)
+            title: savefile name
+            type: 1~3 for each plot (see details at Returns)
+            save: True is save fig
+        
+        Returns:
+            1: Plot variance explained
+            2: Plot the principal component weights (the eigenvectors)
+            3: Plot the principal component time series (pca transform data)
+        """
+    
+        path = self.save_path
+        PCA_total2 = data
+        Ts = self.Ts
+    
+        v = PCA_total2['v']
+        p = PCA_total2['p'].T
+        dd = PCA_total2['dd']
+        
+        p_size = np.shape(p)
+        
+        if type == 1:
+            # Plot variance explained
+            # Get the explained variance ratio and cumulative sum
+            var_explained = np.cumsum(dd) * 100
+            
+            fig1 = plt.figure()
+            plt.plot(var_explained[:20], 'o-', label="Cumulative variance explained")
+            plt.xlabel('Dimensions')
+            plt.ylabel('Variance explained (%)')
+            plt.title('Variance Explained')
+        
+            if save:
+                fig1.savefig(title, dpi=300)
+                
+            # fig1.show()
+        
+            return fig1
+        
+        
+        elif type == 2:
+            # Plot the principal component weights (the eigenvectors)
+            fig2 = plt.figure()
+            plt.plot(v.T)  # The components are in rows, so transpose for plotting
+            plt.xlabel('Cells')
+            plt.ylabel('Weights')
+            plt.title('Principal Component Weights')
+            plt.tight_layout()
+        
+            if save:
+                fig2.savefig(title, dpi=300)
+                
+            # fig2.show()
+        
+            return fig2
+        
+        
+        elif type == 3:
+            time1 = onset / Ts * 1000
+            time2 = (p_size[1] - onset) / Ts * 1000
+            
+            # Plot the principal component time series (scores)
+            fig3 = plt.figure()
+            for i in range(4):  # Plot the first 4 components or up to nmode
+                ax = plt.subplot(4, 1, i + 1)
+                ax.plot(np.arange(-time1, time2), p[i, :p_size[1]])  # Assuming 600 time steps
+                ax.set_title(f'dPC {i + 1}')
+                ax.axis('tight')
+                ax.get_xaxis().set_ticks([])
+            plt.xlabel('Time after saccade onset (ms)')
+            plt.tight_layout()
+            
+            if save:
+                fig3.savefig(title, dpi=300)
+                
+            # fig3.show()
+        
+            return fig3
