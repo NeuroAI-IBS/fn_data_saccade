@@ -246,3 +246,69 @@ class analysis_pca:
             # fig3.show()
         
             return fig3
+
+    def pca_trajectory_plot(self, data, time_period, type, 
+                        rgbC = [0, 0, 0], rgbC_Face = [0.2, 0.2, 0.2], 
+                        scatter_size = 10, lineW = 3,
+                        win = 1, title = "pca_fig.jpg", save = True):
+        """
+        Plot for PCA data
+    
+        Parameters:
+            data: dictionary{'v': pca components, 'p': pca transform data, 'dd': explained variance_ratio}
+            time_period: time point (data point)
+            type: 1~2 for each plot (see details at Returns)
+            rgbC: RGB color (0 to 1)
+            rgbC_Face: RGB face color (0 to 1)
+            scatter_size: scatter_size
+            lineW: line width
+            win: window size for additional smoothing, if sampling rate is 1000hz, win=10 is 10ms
+            title: savefile name
+            save: True is save fig
+        
+        Returns:
+            type = 1: Scatter plot for PCA trajectory
+            type = 2: Pretty plot for PCA trajectory
+        """
+    
+        from scipy.ndimage import gaussian_filter1d
+        
+        temp_PC = data['p'].T
+        s_temp1 = gaussian_filter1d(temp_PC[0], win)
+        s_temp2 = gaussian_filter1d(temp_PC[1], win)
+        s_temp3 = gaussian_filter1d(temp_PC[2], win)
+    
+        X = s_temp1[time_period[0]:time_period[1]]
+        Y = s_temp2[time_period[0]:time_period[1]]
+        Z = s_temp3[time_period[0]:time_period[1]]
+    
+        # Plotting
+        if type == 1:
+            fig1 = plt.figure()
+            plt.scatter(X, Y, s = scatter_size, color = rgbC, marker='o')
+            
+            plt.xlabel('PC1')
+            plt.ylabel('PC2')
+            # zlabel('PC3')
+            
+            plt.rc('font', size=15)
+            
+            if save:
+                fig1.savefig(title, dpi=300)
+            
+            return fig1
+        
+        elif type == 2:
+            
+            from matplotlib.markers import CARETUP
+            
+            fig2 = plt.plot(X, Y, linewidth = lineW, color = rgbC)
+            plt.scatter(X[0], Y[0], s=400, color = rgbC, facecolors='none')
+            plt.scatter(X[300], Y[300], marker=CARETUP, s=200, color = rgbC, facecolor = rgbC_Face)
+            plt.xlabel('dPC1')
+            plt.ylabel('dPC2')
+        
+            if save:
+                fig2.savefig(title, dpi=300)
+        
+            return fig2
