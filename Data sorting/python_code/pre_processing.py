@@ -348,7 +348,8 @@ class pre_processing:
         datacat_total=[]
         valcat_total=[]
         datacat_num=[]
-        for a in range(8):
+        # for a in range(8): # Start from Up direction, clock-wise
+        for a in [2, 1, 0, 7, 6, 5, 4, 3]:  # Start from right direction, anticlock-wise
         
             temp=[]
             temp2=[]
