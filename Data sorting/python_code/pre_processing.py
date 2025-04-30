@@ -299,41 +299,41 @@ class pre_processing:
         
             idx_all = [cat_ori == i for i in range(9)]
         
-            # spike data sorting
-            data_catt=[TT[idx_all[1],:],
+            # spike data sorting, 1~8: Start from Up direction, clock-wise, [3, 2, 1, 8, 7, 6, 5, 4]: Start from right direction, anticlock-wise
+            data_catt=[TT[idx_all[3],:],
                       TT[idx_all[2],:],
-                      TT[idx_all[3],:],
-                      TT[idx_all[4],:],
-                      TT[idx_all[5],:],
-                      TT[idx_all[6],:],
-                      TT[idx_all[7],:],
+                      TT[idx_all[1],:],
                       TT[idx_all[8],:],
+                      TT[idx_all[7],:],
+                      TT[idx_all[6],:],
+                      TT[idx_all[5],:],
+                      TT[idx_all[4],:],
                       TT[idx_all[0],:]
                      ]
             data_cat.append(np.array(data_catt, dtype = object))
         
             # velocity data sorting
-            val_catt=[VV[idx_all[1],:],
+            val_catt=[VV[idx_all[3],:],
                      VV[idx_all[2],:],
-                     VV[idx_all[3],:],
-                     VV[idx_all[4],:],
-                     VV[idx_all[5],:],
-                     VV[idx_all[6],:],
-                     VV[idx_all[7],:],
+                     VV[idx_all[1],:],
                      VV[idx_all[8],:],
+                     VV[idx_all[7],:],
+                     VV[idx_all[6],:],
+                     VV[idx_all[5],:],
+                     VV[idx_all[4],:],
                      VV[idx_all[0],:]
                     ]
             val_cat.append(np.array(val_catt, dtype = object))
         
             # duration data sorting
-            dur_catt=[DD[idx_all[1]],
+            dur_catt=[DD[idx_all[3]],
                      DD[idx_all[2]],
-                     DD[idx_all[3]],
-                     DD[idx_all[4]],
-                     DD[idx_all[5]],
-                     DD[idx_all[6]],
-                     DD[idx_all[7]],
+                     DD[idx_all[1]],
                      DD[idx_all[8]],
+                     DD[idx_all[7]],
+                     DD[idx_all[6]],
+                     DD[idx_all[5]],
+                     DD[idx_all[4]],
                      DD[idx_all[0]]
                     ]
             dur_cat.append(np.array(dur_catt, dtype = object))    
@@ -348,8 +348,7 @@ class pre_processing:
         datacat_total=[]
         valcat_total=[]
         datacat_num=[]
-        # for a in range(8): # Start from Up direction, clock-wise
-        for a in [2, 1, 0, 7, 6, 5, 4, 3]:  # Start from right direction, anticlock-wise
+        for a in range(8):
         
             temp=[]
             temp2=[]
