@@ -103,7 +103,7 @@ class analysis_pca:
             print(f'Dimensions to be reduced: {nmode}')
             
             # Store PCA results for each orientation
-            PCA_total[ori] = {'v': pca.components_, 'p': pca.transform(temp_data), 'dd': pca.explained_variance_ratio_}
+            PCA_total = {'v': pca.components_, 'p': pca.transform(temp_data), 'dd': pca.explained_variance_ratio_}
             
 
         elif len(np.shape(data_cat_sm)) == 3:
