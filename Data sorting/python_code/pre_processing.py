@@ -250,11 +250,11 @@ class pre_processing:
         - need ori_templet.npy
     
         Returns:
-        - final_cat
-        - data_cat
-        - val_cat
-        - dur_cat
-        - rejectedXY_cat
+        - final_cat: direction 1~8, Start from Up direction, clock-wise
+        - data_cat: spike data
+        - val_cat: velocity data
+        - dur_cat: duration data
+        - rejectedXY_cat: X, Y data for rejected data
         """
         
         # Load data
