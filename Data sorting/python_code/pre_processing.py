@@ -240,7 +240,7 @@ class pre_processing:
         np.save('epoched_data.npy',total_epodata)
 
 
-    def datasorting_orientation(self, type):
+    def datasorting_orientation(self, type, print_s = False):
         """
         Sort data by 8 orientation
     
@@ -342,7 +342,8 @@ class pre_processing:
             rejectedXY_catt=np.array([X[idx_all[0],:],Y[idx_all[0],:]])
             rejectedXY_cat.append(rejectedXY_catt)
     
-            print(f"Vel_Data_M size_{c_num}:", np.shape(VV)[0], np.shape(DD)[0])
+            if print_s:
+                print(f"Vel_Data_M size_{c_num}:", np.shape(VV)[0], np.shape(DD)[0])
         
         # accumulate total cell of each orientation
         datacat_total=[]
