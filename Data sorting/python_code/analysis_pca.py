@@ -69,7 +69,7 @@ class analysis_pca:
         Generate PCA data from averaged spike data.
     
         Parameters:
-            data: direction X cells X time
+            data: direction (optional) X cells X time
         
         Returns:
             dictionary[direction]
@@ -82,10 +82,9 @@ class analysis_pca:
         from sklearn.decomposition import PCA
     
         PCA_total = {}
-        
-        # Loop over the orientations (assuming 8 orientations)
-        for ori in range(ds):
-            temp_data = data_cat_sm[ori].T  
+
+        if len(np.shape(data_cat_sm)) == 2:
+            temp_data = data_cat_sm.T  
             pca = PCA()
             pca.fit(temp_data)  # Perform PCA
             v = pca.components_   # coeff
@@ -105,6 +104,31 @@ class analysis_pca:
             
             # Store PCA results for each orientation
             PCA_total[ori] = {'v': pca.components_, 'p': pca.transform(temp_data), 'dd': pca.explained_variance_ratio_}
+            
+
+        elif len(np.shape(data_cat_sm)) == 3:
+            # Loop over the orientations (assuming 8 orientations)
+            for ori in range(ds):
+                temp_data = data_cat_sm[ori].T  
+                pca = PCA()
+                pca.fit(temp_data)  # Perform PCA
+                v = pca.components_   # coeff
+                p = pca.transform(temp_data).T  # scores
+                dd = pca.explained_variance_ratio_   # explained variance
+            
+                # Get the explained variance ratio and cumulative sum
+                var_explained = np.cumsum(dd) * 100
+                
+                # Print the variance explained for the first 5 components
+                for i in range(5):
+                    print(f'Dimensions: {i+1}, Variance explained: {var_explained[i]:.2f}%')
+            
+                # Find the dimension to reduce to based on cumulative variance explained
+                nmode = np.argmax(var_explained > 87.5) + 1
+                print(f'Dimensions to be reduced: {nmode}')
+                
+                # Store PCA results for each orientation
+                PCA_total[ori] = {'v': pca.components_, 'p': pca.transform(temp_data), 'dd': pca.explained_variance_ratio_}
     
         return PCA_total
 
