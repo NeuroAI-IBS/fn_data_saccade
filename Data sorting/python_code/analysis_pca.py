@@ -51,7 +51,7 @@ class analysis_pca:
         from filter_matrix import filter_matrix
         
         data_cat_sm = []
-        for angle in range(8):
+        for angle in range(ds-1):
             temp_cat = [];
             for n in range(np.shape(data_cat)[0]):
                 z = data_cat[n][angle]
@@ -69,8 +69,7 @@ class analysis_pca:
         Generate PCA data from averaged spike data.
     
         Parameters:
-            sigma: float, optional
-                Standard deviation of the Gaussian kernel (default: 2). See details at "filter_matrix.py"
+            data: direction X cells X time
         
         Returns:
             dictionary[direction]
