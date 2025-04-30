@@ -342,7 +342,7 @@ class pre_processing:
             rejectedXY_catt=np.array([X[idx_all[0],:],Y[idx_all[0],:]])
             rejectedXY_cat.append(rejectedXY_catt)
     
-            print(np.shape(VV)[0], np.shape(DD))
+            print(f"Vel_Data_M size_{c_num}:", np.shape(VV)[0], np.shape(DD)[0])
         
         # accumulate total cell of each orientation
         datacat_total=[]
