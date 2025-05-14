@@ -9,9 +9,10 @@ from scipy.ndimage import gaussian_filter1d
 
 class preprecessing_distMat:
 
-    def __init__(self, Ts, data, save_path):
+    def __init__(self, Ts, data, data2, save_path):
         self.Ts = Ts
         self.data = data
+        self.data2 = data2
         self.data_size = np.shape(data)
         self.save_path = save_path
 
@@ -31,6 +32,8 @@ class preprecessing_distMat:
         # label_ori={'Up','Up right', 'Right', 'Down right',...
         #     'Down', 'Down left', 'Left', 'Up left'};
         data_cat = self.data
+        val_cat = self.data2
+        Ts = self.Ts
         
         peak_all = []
         for data_num in range(np.shape(data_cat)[0]):
